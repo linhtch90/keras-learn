@@ -22,10 +22,20 @@ x_train = vectorize_sequences(train_data)
 x_test = vectorize_sequences(test_data)
 
 y_train = np.asarray(train_labels).astype("float32")
-y_test = np.asarray(train_labels).astype("float32")
+y_test = np.asarray(test_labels).astype("float32")
 
 model = keras.Sequential(
     [layers.Dense(16, activation="relu"), layers.Dense(16, activation="relu"), layers.Dense(1, activation="sigmoid")])
 
+model.compile(optimizer="rmsprop", loss="binary_crossentropy", metrics=["accuracy"])
 
-model.compile
+x_val = x_train[:10000]
+partial_x_train = x_train[10000:]
+
+y_val = y_train[:10000]
+partial_y_train = y_train[10000:]
+
+history = model.fit(x_train, y_train, epochs=8, batch_size=512, validation_data=(x_test, y_test))
+
+results = model.evaluate(x_test[100:], y_test[100:])
+print("results", results)
